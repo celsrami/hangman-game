@@ -1,6 +1,24 @@
+/* eslint-disable no-lone-blocks */
+import { useState } from 'react';
 import '../styles/App.scss';
 
+{/* 
+1. Acciones al arrancar la página:
+  - Cargar una palabra del servidor usando fetch
+  - Pintar rayitas según el número de letras de la palabra 
+2. Acciones después de un evento de la usuaria:
+  - Que se vea el valor de input y compararlo con la palabra
+  - Condicional: si la letra está en la palabra pintarla en la solución y en la posición correcta, si no pintarla en las letras falladas y dibujar el ahorcado.
+  - Errores 13. Si llegas a 13 errores mensaje de has perdido, si completas la palabra mensaje de has ganado (comparar el array de la palabra con el array de la solución, si la longitud es la misma has ganado)
+*/}
+
 function App() {
+  const [numberOfErrors, setnumberOfErrors] = useState(0);
+
+  const handleClick = () => {
+    setnumberOfErrors(numberOfErrors + 1)
+    console.log(numberOfErrors);
+  }
   return (
     <div className="page">
       <header>
@@ -38,16 +56,16 @@ function App() {
               Escribe una letra:
             </label>
             <input
-              autocomplete="off"
+              autoComplete="off"
               className="form__input"
-              maxlength="1"
+              maxLength="1"
               type="text"
               name="last-letter"
               id="last-letter"
             />
           </form>
         </section>
-        <section className="dummy error-5">
+        <section className={`dummy error-${numberOfErrors}`}>
           <span className="error-13 eye"></span>
           <span className="error-12 eye"></span>
           <span className="error-11 line"></span>
@@ -63,6 +81,7 @@ function App() {
           <span className="error-1 line"></span>
         </section>
       </main>
+      <button onClick={handleClick}>Incrementar</button>
     </div>
   );
 }
