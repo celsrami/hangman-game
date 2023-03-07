@@ -2,7 +2,8 @@
 import { useState } from 'react';
 import '../styles/App.scss';
 
-{/* 
+{
+  /* 
 1. Acciones al arrancar la página:
   - Cargar una palabra del servidor usando fetch
   - Pintar rayitas según el número de letras de la palabra 
@@ -10,15 +11,29 @@ import '../styles/App.scss';
   - Que se vea el valor de input y compararlo con la palabra
   - Condicional: si la letra está en la palabra pintarla en la solución y en la posición correcta, si no pintarla en las letras falladas y dibujar el ahorcado.
   - Errores 13. Si llegas a 13 errores mensaje de has perdido, si completas la palabra mensaje de has ganado (comparar el array de la palabra con el array de la solución, si la longitud es la misma has ganado)
-*/}
+*/
+}
 
 function App() {
   const [numberOfErrors, setnumberOfErrors] = useState(0);
+  const [lastLetter, setlastLetter] = useState('');
 
   const handleClick = () => {
-    setnumberOfErrors(numberOfErrors + 1)
+    setnumberOfErrors(numberOfErrors + 1);
     console.log(numberOfErrors);
-  }
+  };
+
+  const handleInput = (ev) => {
+    const inputValue = ev.target.value;
+    const regExp = /[A - ZÁ - üñÑ]/i;
+    const test = regExp.test(inputValue);
+    if (test) {
+      setlastLetter(inputValue);
+    } else {
+      alert('Esa letra no es válida');
+    }
+  };
+
   return (
     <div className="page">
       <header>
@@ -62,6 +77,8 @@ function App() {
               type="text"
               name="last-letter"
               id="last-letter"
+              value={lastLetter}
+              onInput={handleInput}
             />
           </form>
         </section>
