@@ -25,9 +25,10 @@ function App() {
 
   const handleInput = (ev) => {
     const inputValue = ev.target.value;
-    const regExp = /[A - ZÁ - üñÑ]/i;
-    const test = regExp.test(inputValue);
-    if (test) {
+    //const regExp = /[A - ZÁ - üñÑ\s]/i;
+    const regExp = /^[A-Za-zñÑáéíóúÁÉÍÓÚüÜ\s]*$/;
+    const pattern = regExp.test(inputValue);
+    if (pattern) {
       setlastLetter(inputValue);
     } else {
       alert('Esa letra no es válida');
