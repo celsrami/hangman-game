@@ -17,6 +17,8 @@ import '../styles/App.scss';
 function App() {
   const [numberOfErrors, setnumberOfErrors] = useState(0);
   const [lastLetter, setlastLetter] = useState('');
+  const [word, setWord] = useState('katakroker');
+  const [userLetters, setUserLetters] = useState([]);
 
   const handleClick = () => {
     setnumberOfErrors(numberOfErrors + 1);
@@ -33,7 +35,36 @@ function App() {
     } else {
       alert('Esa letra no es válida');
     }
+    const letters = [...userLetters]
+    letters.push(inputValue)
+    setUserLetters(letters)
   };
+
+  const renderSolutionLetters = () => {
+    const wordLetters = word.split('');
+    return wordLetters.map((eachLetter, index) => {
+      if (userLetters.includes(eachLetter)) {
+        return <li key={index} className="letter">{eachLetter}</li>
+      } else {
+        return <li key={index} className="letter"></li>
+      }
+    })
+  }
+
+  const renderErrorLetters = () => {
+    return userLetters
+      .filter(eachLetter => !word.includes(eachLetter))
+      .map((eachLetter, index) => {
+        return <li key={index} className="letter">{eachLetter}</li>
+      })
+    // return wordLetters.map((eachLetter, index) => {
+    //   if (!userLetters.includes(eachLetter)) {
+    //     return <li key={index} className="letter">{eachLetter}</li>
+    //   } else {
+    //     return <li key={index} className="letter"></li>
+    //   }
+    // })
+  }
 
   return (
     <div className="page">
@@ -45,26 +76,13 @@ function App() {
           <div className="solution">
             <h2 className="title">Solución:</h2>
             <ul className="letters">
-              <li className="letter">k</li>
-              <li className="letter">a</li>
-              <li className="letter"></li>
-              <li className="letter">a</li>
-              <li className="letter">k</li>
-              <li className="letter">r</li>
-              <li className="letter"></li>
-              <li className="letter">k</li>
-              <li className="letter">e</li>
-              <li className="letter">r</li>
+              {renderSolutionLetters()}
             </ul>
           </div>
           <div className="error">
             <h2 className="title">Letras falladas:</h2>
             <ul className="letters">
-              <li className="letter">f</li>
-              <li className="letter">q</li>
-              <li className="letter">h</li>
-              <li className="letter">p</li>
-              <li className="letter">x</li>
+              {renderErrorLetters()}
             </ul>
           </div>
           <form className="form">
