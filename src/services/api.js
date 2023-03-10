@@ -1,17 +1,10 @@
 const callToApi = () => {
   // Llamamos a la API
-  return fetch(url)
+  return fetch('https://dev.adalab.es/api/random/word')
     .then((response) => response.json())
     .then((response) => {
-      // Cuando responde la API podemos limpiar los datos aquí
-      const result = {
-        name: response.name,
-        birthYear: response.birth_year,
-        height: response.height,
-        mass: response.mass,
-        eyeColor: response.eye_color,
-      };
-      return result;
+      console.log(response)
+      return response;
     });
 };
 

@@ -1,6 +1,7 @@
 /* eslint-disable no-lone-blocks */
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import '../styles/App.scss';
+import callToApi from '../services/api';
 
 {
   /* 
@@ -15,16 +16,16 @@ import '../styles/App.scss';
 }
 
 function App() {
-  const [numberOfErrors, setnumberOfErrors] = useState(0);
   const [lastLetter, setlastLetter] = useState('');
-  const [word, setWord] = useState('katakroker');
+  const [word, setWord] = useState('');
   const [userLetters, setUserLetters] = useState([]);
-  const [errorLetters, setErrorLetters] = useState([]);
 
-  const handleClick = () => {
-    setnumberOfErrors(numberOfErrors + 1);
-    console.log(numberOfErrors);
-  };
+  useEffect(() => {
+    callToApi()
+      .then(response => {
+        setWord(response.word)
+      })
+  }, [])
 
   const handleInput = (ev) => {
     const inputValue = ev.target.value;
@@ -39,7 +40,6 @@ function App() {
     const letters = [...userLetters];
     letters.push(inputValue);
     setUserLetters(letters);
-    countErrors();
   };
 
   const renderSolutionLetters = () => {
@@ -58,22 +58,21 @@ function App() {
   };
 
   const countErrors = () => {
-    const failedLetters = userLetters.filter(
-      (eachLetter) => !word.includes(eachLetter)
-    );
-    setErrorLetters(failedLetters);
+    return userLetters
+      .filter((eachLetter) => !word.includes(eachLetter))
+      .length
   };
 
   const renderErrorLetters = () => {
-    // const failedLetters = userLetters
-    //   .filter((eachLetter) => !word.includes(eachLetter))
-    return errorLetters.map((eachLetter, index) => {
-      return (
-        <li key={index} className="letter">
-          {eachLetter}
-        </li>
-      );
-    });
+    return userLetters
+      .filter((eachLetter) => !word.includes(eachLetter))
+      .map((eachLetter, index) => {
+        return (
+          <li key={index} className="letter">
+            {eachLetter}
+          </li>
+        );
+      });
   };
 
   return (
@@ -107,7 +106,7 @@ function App() {
             />
           </form>
         </section>
-        <section className={`dummy error-${errorLetters.length}`}>
+        <section className={`dummy error-${countErrors()}`}>
           <span className="error-13 eye"></span>
           <span className="error-12 eye"></span>
           <span className="error-11 line"></span>
@@ -123,7 +122,6 @@ function App() {
           <span className="error-1 line"></span>
         </section>
       </main>
-      <button onClick={handleClick}>Incrementar</button>
     </div>
   );
 }
