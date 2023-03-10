@@ -19,6 +19,7 @@ function App() {
   const [lastLetter, setlastLetter] = useState('');
   const [word, setWord] = useState('katakroker');
   const [userLetters, setUserLetters] = useState([]);
+  const [errorLetters, setErrorLetters] = useState([]);
 
   const handleClick = () => {
     setnumberOfErrors(numberOfErrors + 1);
@@ -35,36 +36,45 @@ function App() {
     } else {
       alert('Esa letra no es válida');
     }
-    const letters = [...userLetters]
-    letters.push(inputValue)
-    setUserLetters(letters)
+    const letters = [...userLetters];
+    letters.push(inputValue);
+    setUserLetters(letters);
+    countErrors();
   };
 
   const renderSolutionLetters = () => {
     const wordLetters = word.split('');
     return wordLetters.map((eachLetter, index) => {
       if (userLetters.includes(eachLetter)) {
-        return <li key={index} className="letter">{eachLetter}</li>
+        return (
+          <li key={index} className="letter">
+            {eachLetter}
+          </li>
+        );
       } else {
-        return <li key={index} className="letter"></li>
+        return <li key={index} className="letter"></li>;
       }
-    })
-  }
+    });
+  };
+
+  const countErrors = () => {
+    const failedLetters = userLetters.filter(
+      (eachLetter) => !word.includes(eachLetter)
+    );
+    setErrorLetters(failedLetters);
+  };
 
   const renderErrorLetters = () => {
-    return userLetters
-      .filter(eachLetter => !word.includes(eachLetter))
-      .map((eachLetter, index) => {
-        return <li key={index} className="letter">{eachLetter}</li>
-      })
-    // return wordLetters.map((eachLetter, index) => {
-    //   if (!userLetters.includes(eachLetter)) {
-    //     return <li key={index} className="letter">{eachLetter}</li>
-    //   } else {
-    //     return <li key={index} className="letter"></li>
-    //   }
-    // })
-  }
+    // const failedLetters = userLetters
+    //   .filter((eachLetter) => !word.includes(eachLetter))
+    return errorLetters.map((eachLetter, index) => {
+      return (
+        <li key={index} className="letter">
+          {eachLetter}
+        </li>
+      );
+    });
+  };
 
   return (
     <div className="page">
@@ -75,15 +85,11 @@ function App() {
         <section>
           <div className="solution">
             <h2 className="title">Solución:</h2>
-            <ul className="letters">
-              {renderSolutionLetters()}
-            </ul>
+            <ul className="letters">{renderSolutionLetters()}</ul>
           </div>
           <div className="error">
             <h2 className="title">Letras falladas:</h2>
-            <ul className="letters">
-              {renderErrorLetters()}
-            </ul>
+            <ul className="letters">{renderErrorLetters()}</ul>
           </div>
           <form className="form">
             <label className="title" htmlFor="last-letter">
@@ -101,7 +107,7 @@ function App() {
             />
           </form>
         </section>
-        <section className={`dummy error-${numberOfErrors}`}>
+        <section className={`dummy error-${errorLetters.length}`}>
           <span className="error-13 eye"></span>
           <span className="error-12 eye"></span>
           <span className="error-11 line"></span>
