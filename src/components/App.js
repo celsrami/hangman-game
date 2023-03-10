@@ -42,6 +42,10 @@ function App() {
     setUserLetters(letters);
   };
 
+  const handleSubmit = (ev) => {
+    ev.preventDefault()
+  }
+
   const renderSolutionLetters = () => {
     const wordLetters = word.split('');
     return wordLetters.map((eachLetter, index) => {
@@ -90,7 +94,7 @@ function App() {
             <h2 className="title">Letras falladas:</h2>
             <ul className="letters">{renderErrorLetters()}</ul>
           </div>
-          <form className="form">
+          <form className="form" onSubmit={handleSubmit}>
             <label className="title" htmlFor="last-letter">
               Escribe una letra:
             </label>
