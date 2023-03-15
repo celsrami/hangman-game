@@ -6,6 +6,7 @@ import Header from './Header/Header';
 import Dummy from './Main/Dummy';
 import SolutionLetters from './Main/SolutionLetters';
 import ErrorLetters from './Main/ErrorLetters';
+import Form from './Main/Form';
 
 {
   /* 
@@ -31,33 +32,29 @@ function App() {
       })
   }, [])
 
-  const handleInput = (ev) => {
-    const inputValue = ev.target.value;
-    //const regExp = /[A - ZÁ - üñÑ\s]/i;
+  const lifting = (value) => {
+
+    const inputValue = value;
     const regExp = /^[A-Za-zñÑáéíóúÁÉÍÓÚüÜ\s]*$/;
     const pattern = regExp.test(inputValue);
     if (pattern) {
-      setlastLetter(inputValue);
+      setlastLetter(value);
     } else {
       alert('Esa letra no es válida');
     }
+    /*
+        setlastLetter(value);
+        */
     const letters = [...userLetters];
-    letters.push(inputValue);
+    letters.push(value);
     setUserLetters(letters);
-  };
-
-  const handleSubmit = (ev) => {
-    ev.preventDefault()
   }
-
 
   const countErrors = () => {
     return userLetters
       .filter((eachLetter) => !word.includes(eachLetter))
       .length
   };
-
-
 
   return (
     <div className="page">
@@ -66,21 +63,10 @@ function App() {
         <section>
           <SolutionLetters word={word} userLetters={userLetters} />
           <ErrorLetters word={word} userLetters={userLetters} />
-          <form className="form" onSubmit={handleSubmit}>
-            <label className="title" htmlFor="last-letter">
-              Escribe una letra:
-            </label>
-            <input
-              autoComplete="off"
-              className="form__input"
-              maxLength="1"
-              type="text"
-              name="last-letter"
-              id="last-letter"
-              value={lastLetter}
-              onInput={handleInput}
-            />
-          </form>
+          <Form
+            lastLetter={lastLetter}
+            lifting={lifting}
+          ></Form>
         </section>
         <Dummy numberOfErrors={countErrors()} />
       </main>
