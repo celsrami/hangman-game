@@ -1,12 +1,16 @@
 /* eslint-disable no-lone-blocks */
-import { useState, useEffect } from 'react';
-import '../styles/App.scss';
-import callToApi from '../services/api';
-import Header from './Header/Header';
-import Dummy from './Main/Dummy';
-import SolutionLetters from './Main/SolutionLetters';
-import ErrorLetters from './Main/ErrorLetters';
-import Form from './Main/Form';
+import { useState, useEffect } from "react";
+import "../styles/App.scss";
+import callToApi from "../services/api";
+import Header from "./Header/Header";
+import Dummy from "./Main/Dummy";
+import SolutionLetters from "./Main/SolutionLetters";
+import ErrorLetters from "./Main/ErrorLetters";
+import Form from "./Main/Form";
+import Footer from "./footer/Footer";
+import { Route, Routes } from "react-router-dom";
+import Instructions from "./Main/Instructions";
+import Options from "./Main/Options";
 
 {
   /* 
@@ -21,26 +25,24 @@ import Form from './Main/Form';
 }
 
 function App() {
-  const [lastLetter, setlastLetter] = useState('');
-  const [word, setWord] = useState('');
+  const [lastLetter, setlastLetter] = useState("");
+  const [word, setWord] = useState("");
   const [userLetters, setUserLetters] = useState([]);
 
   useEffect(() => {
-    callToApi()
-      .then(response => {
-        setWord(response.word)
-      })
-  }, [])
+    callToApi().then((response) => {
+      setWord(response.word);
+    });
+  }, []);
 
   const lifting = (value) => {
-
     const inputValue = value;
     const regExp = /^[A-Za-zñÑáéíóúÁÉÍÓÚüÜ\s]*$/;
     const pattern = regExp.test(inputValue);
     if (pattern) {
       setlastLetter(value);
     } else {
-      alert('Esa letra no es válida');
+      alert("Esa letra no es válida");
     }
     /*
         setlastLetter(value);
@@ -48,28 +50,36 @@ function App() {
     const letters = [...userLetters];
     letters.push(value);
     setUserLetters(letters);
-  }
+  };
 
   const countErrors = () => {
-    return userLetters
-      .filter((eachLetter) => !word.includes(eachLetter))
-      .length
+    return userLetters.filter((eachLetter) => !word.includes(eachLetter))
+      .length;
   };
 
   return (
-    <div className="page">
+    <div className='page'>
       <Header />
-      <main className="main">
-        <section>
-          <SolutionLetters word={word} userLetters={userLetters} />
-          <ErrorLetters word={word} userLetters={userLetters} />
-          <Form
-            lastLetter={lastLetter}
-            lifting={lifting}
-          ></Form>
-        </section>
+      <main className='main'>
+        <Routes>
+          <Route
+            path='/'
+            element={
+              <>
+                <section>
+                  <SolutionLetters word={word} userLetters={userLetters} />
+                  <ErrorLetters word={word} userLetters={userLetters} />
+                  <Form lastLetter={lastLetter} lifting={lifting}></Form>
+                </section>
+              </>
+            }
+          ></Route>
+          <Route path='/instructions' element={<Instructions />}></Route>
+          <Route path='/options' element={<Options />}></Route>
+        </Routes>
         <Dummy numberOfErrors={countErrors()} />
       </main>
+      <Footer />
     </div>
   );
 }
