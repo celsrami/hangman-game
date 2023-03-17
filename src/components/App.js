@@ -11,6 +11,7 @@ import Footer from "./footer/Footer";
 import { Route, Routes } from "react-router-dom";
 import Instructions from "./Main/Instructions";
 import Options from "./Main/Options";
+import Loading from './Main/Loading';
 
 {
   /* 
@@ -28,12 +29,19 @@ function App() {
   const [lastLetter, setlastLetter] = useState("");
   const [word, setWord] = useState("");
   const [userLetters, setUserLetters] = useState([]);
+  const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
+    setIsLoading(true)
     callToApi().then((response) => {
       setWord(response.word);
+      setIsLoading(false);
     });
   }, []);
+
+  const handleNewWordLifting = (value) => {
+    setWord(value)
+  };
 
   const lifting = (value) => {
     const inputValue = value;
@@ -60,7 +68,9 @@ function App() {
   return (
     <div className='page'>
       <Header />
+
       <main className='main'>
+        <Loading isLoading={isLoading} />
         <Routes>
           <Route
             path='/'
@@ -75,7 +85,7 @@ function App() {
             }
           ></Route>
           <Route path='/instructions' element={<Instructions />}></Route>
-          <Route path='/options' element={<Options />}></Route>
+          <Route path='/options' element={<Options handleNewWordLifting={handleNewWordLifting} />}></Route>
         </Routes>
         <Dummy numberOfErrors={countErrors()} />
       </main>

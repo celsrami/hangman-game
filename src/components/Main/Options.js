@@ -1,7 +1,16 @@
-const Options = () => {
+const Options = ({ handleNewWordLifting }) => {
+
+  const handleSubmit = (ev) => {
+    ev.preventDefault();
+  }
+
+  const handleNewWord = (ev) => {
+    handleNewWordLifting(ev.target.value)
+  }
+
   return (
-    <form>
-      <label class='title' for='word'>
+    <form onSubmit={handleSubmit}>
+      <label className='title' htmlFor='word'>
         Escribe aquí la palabra que hay que adivinar:
       </label>
       <input
@@ -12,6 +21,7 @@ const Options = () => {
         type='text'
         id='word'
         name='word'
+        onChange={handleNewWord}
       />
     </form>
   );
